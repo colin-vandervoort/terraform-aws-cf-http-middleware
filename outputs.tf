@@ -1,5 +1,9 @@
 output "lambda_name_viewer_req" {
-  value = local.viewer_req_func_name
+  value = var.lambda_viewer_req_func_name
+}
+
+output "dynamodb_url_action_table_name" {
+  value = local.dynamodb_url_action_table_name
 }
 
 output "lambda_qualified_arn_viewer_req" {

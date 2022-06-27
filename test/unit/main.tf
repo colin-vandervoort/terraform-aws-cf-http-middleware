@@ -13,9 +13,9 @@ provider "aws" {
   region = "us-east-1"
 }
 
-variable "dynamodb_url_action_table_name" {
+variable "lambda_viewer_req_func_name" {
   type        = string
-  description = "Name of the AWS DynamoDB table which will be used for storing actions associated with URLs (e.g. 301 redirects)"
+  description = "Name for the viewer-request Lambda function."
 }
 
 variable "lambda_zip_bucket_name" {
@@ -42,12 +42,13 @@ variable "dynamodb_url_action_table_items" {
 }
 
 locals {
+  dynamodb_url_action_table_name = var.lambda_viewer_req_func_name
   dynamodb_url_action_table_hash_key = "url"
 }
 
 module "http_middleware" {
   source                          = "../.."
-  dynamodb_url_action_table_name  = var.dynamodb_url_action_table_name
+  lambda_viewer_req_func_name     = var.lambda_viewer_req_func_name
   lambda_zip_bucket_name          = var.lambda_zip_bucket_name
   lambda_viewer_req_zip_filename  = var.lambda_viewer_req_zip_filename
   lambda_origin_resp_zip_filename = var.lambda_origin_resp_zip_filename
@@ -56,7 +57,7 @@ module "http_middleware" {
 resource "aws_dynamodb_table_item" "test_url_actions" {
   for_each = var.dynamodb_url_action_table_items
 
-  table_name = var.dynamodb_url_action_table_name
+  table_name = local.dynamodb_url_action_table_name
   hash_key   = local.dynamodb_url_action_table_hash_key
 
   item = jsonencode({
@@ -81,9 +82,9 @@ resource "aws_dynamodb_table_item" "test_url_actions" {
 }
 
 data "aws_lambda_invocation" "test_add_trailing_slash" {
-    function_name = module.http_middleware.lambda_name_viewer_req
+  function_name = module.http_middleware.lambda_name_viewer_req
 
-    input = <<JSON
+  input = <<JSON
 {
   "Records": [
     {
@@ -102,5 +103,5 @@ JSON
 }
 
 output "test_add_trailing_slash_result" {
-    value = jsondecode(data.aws_lambda_invocation.test_add_trailing_slash.result)
+  value = jsondecode(data.aws_lambda_invocation.test_add_trailing_slash.result)
 }

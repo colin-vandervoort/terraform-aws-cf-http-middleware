@@ -26,7 +26,7 @@ func TestViewerReq(t *testing.T) {
 	terraformOptions := terraform.WithDefaultRetryableErrors(t, &terraform.Options{
 		TerraformDir: "./unit",
 		Vars: map[string]interface{}{
-			"dynamodb_url_action_table_name":  "cf-http-middleware-test-action-table",
+			"lambda_viewer_req_func_name":     "cf-http-middleware-test-viewer-req",
 			"lambda_zip_bucket_name":          "spacey-artifacts",
 			"lambda_viewer_req_zip_filename":  "cf-viewer-req.zip",
 			"lambda_origin_resp_zip_filename": "cf-origin-resp.zip",
@@ -73,7 +73,7 @@ func TestSystem(t *testing.T) {
 	terraformOptions := terraform.WithDefaultRetryableErrors(t, &terraform.Options{
 		TerraformDir: "./integration",
 		Vars: map[string]interface{}{
-			"dynamodb_url_action_table_name":  "cf-http-middleware-test-action-table",
+			"lambda_viewer_req_func_name":     "cf-http-middleware-test-viewer-req",
 			"lambda_zip_bucket_name":          "spacey-artifacts",
 			"lambda_viewer_req_zip_filename":  "cf-viewer-req.zip",
 			"lambda_origin_resp_zip_filename": "cf-origin-resp.zip",

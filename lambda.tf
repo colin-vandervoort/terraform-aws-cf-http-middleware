@@ -49,7 +49,7 @@ resource "aws_iam_role_policy_attachment" "attach_iam_policy_to_iam_role" {
 }
 
 resource "aws_lambda_function" "viewer_req" {
-  function_name = local.viewer_req_func_name
+  function_name = var.lambda_viewer_req_func_name
   role          = aws_iam_role.viewer_req.arn
 
   s3_bucket    = var.lambda_zip_bucket_name
@@ -59,12 +59,6 @@ resource "aws_lambda_function" "viewer_req" {
 
   handler = "index.handler"
   runtime = "nodejs14.x"
-
-  environment {
-    variables = {
-      URL_ACTION_TABLE_NAME = aws_dynamodb_table.url_actions.id
-    }
-  }
 }
 
 # # Origin response event

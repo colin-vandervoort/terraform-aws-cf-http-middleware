@@ -1,6 +1,6 @@
-variable "dynamodb_url_action_table_name" {
+variable "lambda_viewer_req_func_name" {
   type        = string
-  description = "Name of the AWS DynamoDB table which will be used for storing actions associated with URLs (e.g. 301 redirects)"
+  description = "Name for the viewer-request Lambda function. This name will be reused for the url actions table name, so it must be unique."
 }
 
 variable "lambda_zip_bucket_name" {

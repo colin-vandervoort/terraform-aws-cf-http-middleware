@@ -9,7 +9,7 @@ import AWS from 'aws-sdk'
 
 const REGION = 'us-east-1'
 const API_VERSION = '2012-08-10'
-const TABLE_NAME = process.env.URL_ACTION_TABLE_NAME || 'url-actions'
+const lambdaName = process.env.AWS_LAMBDA_FUNCTION_NAME ?? ''
 
 AWS.config.update({ region: REGION })
 
@@ -43,8 +43,8 @@ export const handler = (
 
   const request = event.Records[0].cf.request
 
-  const getParams = {
-    TableName: TABLE_NAME,
+  const getParams: AWS.DynamoDB.DocumentClient.GetItemInput = {
+    TableName: lambdaName,
     Key: {
       url: request.uri,
     },

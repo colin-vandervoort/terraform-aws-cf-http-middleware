@@ -1,5 +1,5 @@
 resource "aws_dynamodb_table" "url_actions" {
-  name           = var.dynamodb_url_action_table_name
+  name           = local.dynamodb_url_action_table_name
   billing_mode   = "PAY_PER_REQUEST"
   table_class    = "STANDARD"
   stream_enabled = false

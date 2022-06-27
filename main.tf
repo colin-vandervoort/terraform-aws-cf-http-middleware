@@ -14,9 +14,6 @@ provider "aws" {
 }
 
 locals {
-  # viewer_req_local_zip = "middleware/viewer-req/${var.lambda_viewer_req_zip_filename}"
-  viewer_req_func_name = "cf-middleware-viewer-req"
-
-  # origin_resp_local_zip = "middleware/origin-resp/${var.lambda_origin_resp_zip_filename}"
-  origin_resp_func_name = "cf-middleware-origin-resp"
+  origin_resp_func_name          = "cf-middleware-origin-resp"
+  dynamodb_url_action_table_name = var.lambda_viewer_req_func_name
 }
