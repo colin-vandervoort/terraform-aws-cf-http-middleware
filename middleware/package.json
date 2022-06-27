@@ -6,9 +6,9 @@
   "scripts": {
     "clean": "rimraf dist",
     "lint": "eslint ./src",
-    "fmt": "prettier --write ./src",
-    "build": "tsc",
-    "dev": "ts-node src/index.ts"
+    "fmt": "prettier --write ./lib ./src-admin ./src-viewer-req",
+    "build-viewer-req": "esbuild src-viewer-req/index.ts --bundle --minify --sourcemap --platform=node --target=es2020 --outfile=dist-viewer-req/index.js",
+    "admin": "ts-node src-admin/index.ts"
   },
   "author": "",
   "license": "ISC",

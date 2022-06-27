@@ -1,5 +1,5 @@
 import { Command } from 'commander'
-import { commands } from "./cli"
+import { commands } from './cli'
 
 const run = async () => {
   try {

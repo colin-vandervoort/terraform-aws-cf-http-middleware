@@ -36,4 +36,5 @@ terraform.rc
 
 *.zip
 node_modules
-dist
+dist-viewer-req
+dist-origin-resp
