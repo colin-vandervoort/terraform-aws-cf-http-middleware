@@ -71,7 +71,7 @@ func TestSystem(t *testing.T) {
 	}
 
 	terraformOptions := terraform.WithDefaultRetryableErrors(t, &terraform.Options{
-		TerraformDir: "./integration",
+		TerraformDir: "./system",
 		Vars: map[string]interface{}{
 			"lambda_viewer_req_func_name":     "cf-http-middleware-test-viewer-req",
 			"lambda_zip_bucket_name":          "spacey-artifacts",
