@@ -103,5 +103,30 @@ JSON
 }
 
 output "test_add_trailing_slash_result" {
-  value = jsondecode(data.aws_lambda_invocation.test_add_trailing_slash.result)
+  value = jsondecode(data.aws_lambda_invocation.test_add_trailing_slash.result)["headers"]["location"][0].value
+}
+
+data "aws_lambda_invocation" "test_bar_to_baz" {
+  function_name = module.http_middleware.lambda_name_viewer_req
+
+  input = <<JSON
+{
+  "Records": [
+    {
+      "cf": {
+        "request": {
+          "uri": "/bar/"
+        }
+      }
+    }
+  ]
+}
+JSON
+  depends_on = [
+    module.http_middleware
+  ]
+}
+
+output "test_bar_to_baz_result" {
+  value = jsondecode(data.aws_lambda_invocation.test_bar_to_baz.result)["headers"]["location"][0].value
 }

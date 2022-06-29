@@ -8,6 +8,7 @@ import (
 
 	http_helper "github.com/gruntwork-io/terratest/modules/http-helper"
 	"github.com/gruntwork-io/terratest/modules/terraform"
+	"github.com/stretchr/testify/assert"
 )
 
 func TestViewerReq(t *testing.T) {
@@ -38,7 +39,9 @@ func TestViewerReq(t *testing.T) {
 	terraform.InitAndApply(t, terraformOptions)
 
 	trailingSlashOutput := terraform.Output(t, terraformOptions, "test_add_trailing_slash_result")
-	fmt.Print(trailingSlashOutput)
+	barToBazOutput := terraform.Output(t, terraformOptions, "test_bar_to_baz_result")
+	assert.Equal(t, "/foo/", trailingSlashOutput)
+	assert.Equal(t, "/baz/", barToBazOutput)
 }
 
 func TestSystem(t *testing.T) {
