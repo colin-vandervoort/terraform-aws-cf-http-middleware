@@ -27,6 +27,7 @@ func TestViewerReq(t *testing.T) {
 	terraformOptions := terraform.WithDefaultRetryableErrors(t, &terraform.Options{
 		TerraformDir: "./unit",
 		Vars: map[string]interface{}{
+			"iam_role_prefix":                 "cf-http-middleware-test",
 			"lambda_viewer_req_func_name":     "cf-http-middleware-test-viewer-req",
 			"lambda_zip_bucket_name":          "spacey-artifacts",
 			"lambda_viewer_req_zip_filename":  "cf-viewer-req.zip",
@@ -76,6 +77,7 @@ func TestSystem(t *testing.T) {
 	terraformOptions := terraform.WithDefaultRetryableErrors(t, &terraform.Options{
 		TerraformDir: "./system",
 		Vars: map[string]interface{}{
+			"iam_role_prefix":                 "cf-http-middleware-test",
 			"lambda_viewer_req_func_name":     "cf-http-middleware-test-viewer-req",
 			"lambda_zip_bucket_name":          "spacey-artifacts",
 			"lambda_viewer_req_zip_filename":  "cf-viewer-req.zip",

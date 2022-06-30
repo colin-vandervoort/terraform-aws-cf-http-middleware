@@ -27,7 +27,7 @@ data "aws_iam_policy_document" "viewer_req_dynamodb" {
 
 
 resource "aws_iam_policy" "viewer_req_dynamodb" {
-  name   = "access-dynamodb-from-viewer-req-lambda"
+  name   = "${var.iam_role_prefix}-access-dynamodb-from-viewer-req-lambda"
   policy = data.aws_iam_policy_document.viewer_req_dynamodb.json
 }
 

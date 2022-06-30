@@ -39,7 +39,7 @@ data "aws_iam_policy_document" "edge_lambda_assume_role" {
 
 # Viewer request event
 resource "aws_iam_role" "viewer_req" {
-  name               = "viewer_req_iam_role"
+  name               = "${var.iam_role_prefix}-viewer-req"
   assume_role_policy = data.aws_iam_policy_document.edge_lambda_assume_role.json
 }
 
@@ -56,6 +56,7 @@ resource "aws_lambda_function" "viewer_req" {
   s3_key       = var.lambda_viewer_req_zip_filename
   package_type = "Zip"
   publish      = true
+  # source_code_hash = filebase64sha256("${path.module}/middleware/cf-viewer-req.zip")
 
   handler = "index.handler"
   runtime = "nodejs14.x"
@@ -63,7 +64,7 @@ resource "aws_lambda_function" "viewer_req" {
 
 # # Origin response event
 # resource "aws_iam_role" "origin_resp" {
-#   name               = "origin_resp_iam_role"
+#   name               = "${var.iam_role_prefix}-origin-resp"
 #   assume_role_policy = data.aws_iam_policy_document.edge_lambda_assume_role.json
 # }
 

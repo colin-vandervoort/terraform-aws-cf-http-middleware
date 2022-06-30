@@ -14,6 +14,5 @@ provider "aws" {
 }
 
 locals {
-  origin_resp_func_name          = "cf-middleware-origin-resp"
   dynamodb_url_action_table_name = var.lambda_viewer_req_func_name
 }

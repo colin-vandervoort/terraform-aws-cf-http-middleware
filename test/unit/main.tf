@@ -13,6 +13,10 @@ provider "aws" {
   region = "us-east-1"
 }
 
+variable "iam_role_prefix" {
+  type        = string
+}
+
 variable "lambda_viewer_req_func_name" {
   type        = string
   description = "Name for the viewer-request Lambda function."
@@ -48,6 +52,7 @@ locals {
 
 module "http_middleware" {
   source                          = "../.."
+  iam_role_prefix                 = var.iam_role_prefix
   lambda_viewer_req_func_name     = var.lambda_viewer_req_func_name
   lambda_zip_bucket_name          = var.lambda_zip_bucket_name
   lambda_viewer_req_zip_filename  = var.lambda_viewer_req_zip_filename
@@ -81,52 +86,52 @@ resource "aws_dynamodb_table_item" "test_url_actions" {
   ]
 }
 
-data "aws_lambda_invocation" "test_add_trailing_slash" {
-  function_name = module.http_middleware.lambda_name_viewer_req
+# data "aws_lambda_invocation" "test_add_trailing_slash" {
+#   function_name = module.http_middleware.lambda_name_viewer_req
 
-  input = <<JSON
-{
-  "Records": [
-    {
-      "cf": {
-        "request": {
-          "uri": "/foo"
-        }
-      }
-    }
-  ]
-}
-JSON
-  depends_on = [
-    module.http_middleware
-  ]
-}
+#   input = <<JSON
+# {
+#   "Records": [
+#     {
+#       "cf": {
+#         "request": {
+#           "uri": "/foo"
+#         }
+#       }
+#     }
+#   ]
+# }
+# JSON
+#   depends_on = [
+#     module.http_middleware
+#   ]
+# }
 
-output "test_add_trailing_slash_result" {
-  value = jsondecode(data.aws_lambda_invocation.test_add_trailing_slash.result)["headers"]["location"][0].value
-}
+# output "test_add_trailing_slash_result" {
+#   value = jsondecode(data.aws_lambda_invocation.test_add_trailing_slash.result)["headers"]["location"][0].value
+# }
 
-data "aws_lambda_invocation" "test_bar_to_baz" {
-  function_name = module.http_middleware.lambda_name_viewer_req
+# data "aws_lambda_invocation" "test_bar_to_baz" {
+#   function_name = module.http_middleware.lambda_name_viewer_req
 
-  input = <<JSON
-{
-  "Records": [
-    {
-      "cf": {
-        "request": {
-          "uri": "/bar/"
-        }
-      }
-    }
-  ]
-}
-JSON
-  depends_on = [
-    module.http_middleware
-  ]
-}
+#   input = <<JSON
+# {
+#   "Records": [
+#     {
+#       "cf": {
+#         "request": {
+#           "uri": "/bar/"
+#         }
+#       }
+#     }
+#   ]
+# }
+# JSON
+#   depends_on = [
+#     module.http_middleware
+#   ]
+# }
 
-output "test_bar_to_baz_result" {
-  value = jsondecode(data.aws_lambda_invocation.test_bar_to_baz.result)["headers"]["location"][0].value
-}
+# output "test_bar_to_baz_result" {
+#   value = jsondecode(data.aws_lambda_invocation.test_bar_to_baz.result)["headers"]["location"][0].value
+# }
