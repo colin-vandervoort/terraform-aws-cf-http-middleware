@@ -15,11 +15,6 @@ const lambdaName = process.env.AWS_LAMBDA_FUNCTION_NAME ?? ''
 
 AWS.config.update({ region: REGION })
 
-type CachedUrlAction = {
-  expires: number
-  action: Action
-}
-
 function createClient(): AWS.DynamoDB.DocumentClient {
   try {
     const ddbDocClient = new AWS.DynamoDB.DocumentClient({
@@ -32,7 +27,6 @@ function createClient(): AWS.DynamoDB.DocumentClient {
   }
 }
 
-const cache = new Map<string, CachedUrlAction>()
 const client = createClient()
 
 export const handler = (
@@ -47,43 +41,24 @@ export const handler = (
   const reqUri = request.uri
 
   new Promise<Action | null>((resolve) => {
-
-    // try the action cache first
-    const cacheResult = cache.get(reqUri)
-    if (cacheResult) {
-      if (Date.now() < cacheResult.expires ) {
-        // cache hit
-        console.log(`Action from cache: ${ cacheResult.action.code }:${ reqUri } -> ${ cacheResult.action.target }`)
-        resolve(cacheResult.action)
-      } else {
-        // this mapping should be overwritten anyways, but delete just in case
-        cache.delete(reqUri)
+    // see if DynamoDB has an action for this URI
+    const getParams: AWS.DynamoDB.DocumentClient.GetItemInput = {
+      TableName: lambdaName,
+      Key: {
+        url: reqUri,
+      },
+    }
+    client.get(getParams, function (err, data) {
+      if (err) {
+        console.log(err.message)
+      }
+      if (typeof data.Item !== 'undefined') {
+        const actionFromDb = data.Item.action
+        console.log(`Action from new database query: ${ actionFromDb.code }:${ reqUri } -> ${ actionFromDb.target }`)
+        resolve(actionFromDb)
       }
       resolve(null)
-    } else {
-      // see if DynamoDB has an action for this URI
-      const getParams: AWS.DynamoDB.DocumentClient.GetItemInput = {
-        TableName: lambdaName,
-        Key: {
-          url: reqUri,
-        },
-      }
-      client.get(getParams, function (err, data) {
-        if (err) {
-          console.log(err.message)
-        }
-        if (typeof data.Item !== 'undefined') {
-          const actionFromDb = data.Item.action
-          console.log(`Action from new database query: ${ actionFromDb.code }:${ reqUri } -> ${ actionFromDb.target }`)
-          cache.set(reqUri, {
-            expires: Date.now() + (30 * 60 * 1000), // 30 minutes
-            action: actionFromDb
-          })
-          resolve(actionFromDb)
-        }
-        resolve(null)
-      })
-    }
+    })
   }).then((action: Action | null) => {
     if (action) {
       // action found, respond to the viewer
