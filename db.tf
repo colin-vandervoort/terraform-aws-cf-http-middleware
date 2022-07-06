@@ -11,7 +11,7 @@ resource "aws_dynamodb_table" "url_actions" {
   }
 }
 
-data "aws_iam_policy_document" "viewer_req_dynamodb" {
+data "aws_iam_policy_document" "origin_req_dynamodb" {
   version = "2012-10-17"
   statement {
     effect = "Allow"
@@ -26,9 +26,9 @@ data "aws_iam_policy_document" "viewer_req_dynamodb" {
 }
 
 
-resource "aws_iam_policy" "viewer_req_dynamodb" {
-  name   = "${var.iam_role_prefix}-access-dynamodb-from-viewer-req-lambda"
-  policy = data.aws_iam_policy_document.viewer_req_dynamodb.json
+resource "aws_iam_policy" "origin_req_dynamodb" {
+  name   = "${var.iam_role_prefix}-access-dynamodb-from-origin-req-lambda"
+  policy = data.aws_iam_policy_document.origin_req_dynamodb.json
 }
 
 

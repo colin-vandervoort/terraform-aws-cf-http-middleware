@@ -4,11 +4,11 @@
 #   force_destroy = true
 # }
 
-# resource "aws_s3_object" "viewer_req_zip" {
+# resource "aws_s3_object" "origin_req_zip" {
 #   bucket = var.lambda_zip_bucket_name
-#   key    = lambda_viewer_req_zip_filename
-#   source = local.viewer_req_local_zip
-#   etag   = filemd5(local.viewer_req_local_zip)
+#   key    = lambda_origin_req_zip_filename
+#   source = local.origin_req_local_zip
+#   etag   = filemd5(local.origin_req_local_zip)
 # }
 
 # resource "aws_s3_object" "origin_resp_zip" {
@@ -38,28 +38,29 @@ data "aws_iam_policy_document" "edge_lambda_assume_role" {
 }
 
 # Viewer request event
-resource "aws_iam_role" "viewer_req" {
-  name               = "${var.iam_role_prefix}-viewer-req"
+resource "aws_iam_role" "origin_req" {
+  name               = "${var.iam_role_prefix}-origin-req"
   assume_role_policy = data.aws_iam_policy_document.edge_lambda_assume_role.json
 }
 
 resource "aws_iam_role_policy_attachment" "attach_iam_policy_to_iam_role" {
-  role       = aws_iam_role.viewer_req.name
-  policy_arn = aws_iam_policy.viewer_req_dynamodb.arn
+  role       = aws_iam_role.origin_req.name
+  policy_arn = aws_iam_policy.origin_req_dynamodb.arn
 }
 
-resource "aws_lambda_function" "viewer_req" {
-  function_name = var.lambda_viewer_req_func_name
-  role          = aws_iam_role.viewer_req.arn
+resource "aws_lambda_function" "origin_req" {
+  function_name = var.lambda_origin_req_func_name
+  role          = aws_iam_role.origin_req.arn
 
   s3_bucket    = var.lambda_zip_bucket_name
-  s3_key       = var.lambda_viewer_req_zip_filename
+  s3_key       = var.lambda_origin_req_zip_filename
   package_type = "Zip"
   publish      = true
-  # source_code_hash = filebase64sha256("${path.module}/middleware/cf-viewer-req.zip")
+  # source_code_hash = filebase64sha256("${path.module}/middleware/cf-origin-req.zip")
 
-  handler = "index.handler"
-  runtime = "nodejs14.x"
+  handler     = "index.handler"
+  runtime     = "nodejs14.x"
+  memory_size = 192
 }
 
 # # Origin response event

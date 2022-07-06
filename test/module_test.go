@@ -28,9 +28,9 @@ func TestViewerReq(t *testing.T) {
 		TerraformDir: "./unit",
 		Vars: map[string]interface{}{
 			"iam_role_prefix":                 "cf-http-middleware-test",
-			"lambda_viewer_req_func_name":     "cf-http-middleware-test-viewer-req",
+			"lambda_origin_req_func_name":     "cf-http-middleware-test-origin-req",
 			"lambda_zip_bucket_name":          "spacey-artifacts",
-			"lambda_viewer_req_zip_filename":  "cf-viewer-req.zip",
+			"lambda_origin_req_zip_filename":  "cf-origin-req.zip",
 			"lambda_origin_resp_zip_filename": "cf-origin-resp.zip",
 			"dynamodb_url_action_table_items": testUrlActions,
 		},
@@ -78,9 +78,9 @@ func TestSystem(t *testing.T) {
 		TerraformDir: "./system",
 		Vars: map[string]interface{}{
 			"iam_role_prefix":                 "cf-http-middleware-test",
-			"lambda_viewer_req_func_name":     "cf-http-middleware-test-viewer-req",
+			"lambda_origin_req_func_name":     "cf-http-middleware-test-origin-req",
 			"lambda_zip_bucket_name":          "spacey-artifacts",
-			"lambda_viewer_req_zip_filename":  "cf-viewer-req.zip",
+			"lambda_origin_req_zip_filename":  "cf-origin-req.zip",
 			"lambda_origin_resp_zip_filename": "cf-origin-resp.zip",
 			"cf_origin_bucket_name":           "cf-http-middleware-test-origin-bucket",
 			"s3_origin_objects":               testPages,

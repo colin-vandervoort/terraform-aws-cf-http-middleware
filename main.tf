@@ -14,5 +14,5 @@ provider "aws" {
 }
 
 locals {
-  dynamodb_url_action_table_name = var.lambda_viewer_req_func_name
+  dynamodb_url_action_table_name = var.lambda_origin_req_func_name
 }

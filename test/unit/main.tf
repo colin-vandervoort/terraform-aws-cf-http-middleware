@@ -17,9 +17,9 @@ variable "iam_role_prefix" {
   type        = string
 }
 
-variable "lambda_viewer_req_func_name" {
+variable "lambda_origin_req_func_name" {
   type        = string
-  description = "Name for the viewer-request Lambda function."
+  description = "Name for the origin-request Lambda function."
 }
 
 variable "lambda_zip_bucket_name" {
@@ -27,9 +27,9 @@ variable "lambda_zip_bucket_name" {
   description = "Name of the AWS S3 bucket which will be used for storing zipped Lambda code"
 }
 
-variable "lambda_viewer_req_zip_filename" {
+variable "lambda_origin_req_zip_filename" {
   type        = string
-  description = "Filename of the zipped viewer-request code"
+  description = "Filename of the zipped origin-request code"
 }
 
 variable "lambda_origin_resp_zip_filename" {
@@ -46,16 +46,16 @@ variable "dynamodb_url_action_table_items" {
 }
 
 locals {
-  dynamodb_url_action_table_name = var.lambda_viewer_req_func_name
+  dynamodb_url_action_table_name = var.lambda_origin_req_func_name
   dynamodb_url_action_table_hash_key = "url"
 }
 
 module "http_middleware" {
   source                          = "../.."
   iam_role_prefix                 = var.iam_role_prefix
-  lambda_viewer_req_func_name     = var.lambda_viewer_req_func_name
+  lambda_origin_req_func_name     = var.lambda_origin_req_func_name
   lambda_zip_bucket_name          = var.lambda_zip_bucket_name
-  lambda_viewer_req_zip_filename  = var.lambda_viewer_req_zip_filename
+  lambda_origin_req_zip_filename  = var.lambda_origin_req_zip_filename
   lambda_origin_resp_zip_filename = var.lambda_origin_resp_zip_filename
 }
 
@@ -87,7 +87,7 @@ resource "aws_dynamodb_table_item" "test_url_actions" {
 }
 
 # data "aws_lambda_invocation" "test_add_trailing_slash" {
-#   function_name = module.http_middleware.lambda_name_viewer_req
+#   function_name = module.http_middleware.lambda_name_origin_req
 
 #   input = <<JSON
 # {
@@ -112,7 +112,7 @@ resource "aws_dynamodb_table_item" "test_url_actions" {
 # }
 
 # data "aws_lambda_invocation" "test_bar_to_baz" {
-#   function_name = module.http_middleware.lambda_name_viewer_req
+#   function_name = module.http_middleware.lambda_name_origin_req
 
 #   input = <<JSON
 # {

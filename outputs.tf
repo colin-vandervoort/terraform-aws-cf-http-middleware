@@ -1,13 +1,13 @@
-output "lambda_name_viewer_req" {
-  value = var.lambda_viewer_req_func_name
+output "lambda_name_origin_req" {
+  value = var.lambda_origin_req_func_name
 }
 
 output "dynamodb_url_action_table_name" {
   value = local.dynamodb_url_action_table_name
 }
 
-output "lambda_qualified_arn_viewer_req" {
-  value = aws_lambda_function.viewer_req.qualified_arn
+output "lambda_qualified_arn_origin_req" {
+  value = aws_lambda_function.origin_req.qualified_arn
 }
 
 # output lambda_qualified_arn_origin_resp {
